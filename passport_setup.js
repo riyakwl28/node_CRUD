@@ -11,7 +11,7 @@ module.exports =function(passport){
         done(null,user.id);
     });
     passport.deserializeUser(function(id,done){
-        MSFIDOCredentialAssertion.User.findOne({
+        models.User.findOne({
             where:{
                 'id': id
             }
@@ -28,7 +28,7 @@ module.exports =function(passport){
         passReqToCallback: true
     },
     function(req,email,password,done){
-        return MSFIDOCredentialAssertion.User.findOne({
+        return models.User.findOne({
             where:{
                 'email':email
             },
@@ -39,7 +39,7 @@ module.exports =function(passport){
             } else if (user.password == null || user.password==undefined){
                 req.flash('message','You must reset your password')
                 return done(null,false)
-            }else if(validPassword(user,password)){
+            }else if(!validPassword(user,password)){
                 req.flash('message',"Incorrect Credentials")
                 return done(null,false)
             }
